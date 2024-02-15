@@ -29,3 +29,33 @@ end
 
 print(calc(l))
 print(calc(l1))
+
+-- O(n) basicamente porq fazemos O(n) sempre, mas com os sub arrays fica O(n + m -> onde m é a qtde de sub arrays)
+-- não chega a ser O(n*n), mas quase
+local function calc2(list)
+	local m = 0
+	for i = 1, #list do
+		if list[i] == 0 then
+			for j = i, #list do
+				if list[j] ~= 0 then
+					if j - i > m then
+						m = j - i
+					end
+					i = j
+					break
+				elseif j == #list then
+					local p = j - i + 1
+					if p > m then
+						m = p
+					end
+					goto break2
+				end
+			end
+		end
+	end
+	::break2::
+	return m
+end
+
+print(calc2(l))
+print(calc2(l1))
