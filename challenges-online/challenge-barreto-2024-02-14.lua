@@ -31,7 +31,7 @@ print(calc(l))
 print(calc(l1))
 
 -- O(n) basicamente porq fazemos O(n) sempre, mas com os sub arrays fica O(n + m -> onde m é a qtde de sub arrays)
--- não chega a ser O(n*n), mas quase
+-- não chega a ser O(2n), mas quase
 local function calc2(list)
 	local m = 0
 	for i = 1, #list do
