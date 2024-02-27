@@ -1,33 +1,64 @@
-local M = {}
+local Queue = {}
+Queue.__index = Queue
 
-local head = nil
-local length = 0
+Queue.Node = {}
+Queue.Node.__index = Queue.Node
 
-M.enqueue = function(value)
-	if head == nil then
-		head = { value = value, next = nil }
-		length = length + 1
-		return
-	end
+function Queue.Node.create(value)
+	local s = {}
+	setmetatable(s, Queue.Node)
 
-	local curr = head
-	while curr.next do
-		curr = curr.next
-	end
-
-	curr.next = { value = value, next = nil }
-	length = length + 1
+	s.value = value
+	s.next = nil
+	return s
 end
 
-M.pop = function()
-	if head == nil then
+function Queue.create()
+	local s = {}
+	setmetatable(s, Queue)
+	s.first = nil
+	s.last = nil
+	s.N = 0
+
+	return s
+end
+
+function Queue:enqueue(value)
+	local oldLast = self.last
+	self.last = Queue.Node.create(value)
+	if oldLast ~= nil then
+		oldLast.next = self.last
+	end
+	if self.first == nil then
+		self.first = self.last
+	end
+
+	self.N = self.N + 1
+end
+
+function Queue:dequeue()
+	local oldFirst = self.first
+	if oldFirst == nil then
 		return nil
 	end
-	local tmp = head
-	head = head.next
-	length = length - 1
 
-	return tmp.value
+	local value = oldFirst.value
+	self.first = oldFirst.next
+	self.N = self.N - 1
+
+	if self.first == nil then
+		self.last = nil
+	end
+
+	return value
 end
 
-return M
+function Queue:size()
+	return self.N
+end
+
+function Queue:isEmpty()
+	return self.N == 0
+end
+
+return Queue
