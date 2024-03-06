@@ -1,21 +1,35 @@
-local Node = require("node")
-
 local M = {}
+M.__index = M
 
-local head
+M.Node = {}
+M.Node.__index = M.Node
 
-M.new = function()
-	return { head = nil }
+function M.Node.create(value)
+	local s = {}
+	setmetatable(s, M.Node)
+
+	s.value = value
+	s.next = nil
+	return s
 end
 
-M.append = function(value)
-	local newNode = Node.new_node(value)
-	if not head then
-		head = newNode
+function M.create()
+	local s = {}
+	setmetatable(s, M)
+
+	s.head = nil
+
+	return s
+end
+
+function M:append(value)
+	local newNode = M.Node.create(value)
+	if not self.head then
+		self.head = newNode
 		return
 	end
 
-	local current = head
+	local current = self.head
 	while current.next do
 		current = current.next
 	end
@@ -23,23 +37,23 @@ M.append = function(value)
 	current.next = newNode
 end
 
-M.prepend = function(value)
-	local node = Node.new_node(value)
-	node.next = head
-	head = node
+function M:prepend(value)
+	local node = M.Node.create(value)
+	node.next = self.head
+	self.head = node
 end
 
-M.delete = function(value)
-	if not head then
+function M:delete(value)
+	if not self.head then
 		return
 	end
 
-	if head.value == value then
-		head = head.next
+	if self.head.value == value then
+		self.head = self.head.next
 		return
 	end
 
-	local current = head
+	local current = self.head
 	while current.next and current.next.value ~= value do
 		current = current.next
 	end
@@ -49,9 +63,9 @@ M.delete = function(value)
 	end
 end
 
-M.insert_after = function(value, after_value)
-	local current = head
-	local node = Node.new_node(after_value)
+function M:insert_after(value, after_value)
+	local current = self.head
+	local node = M.Node.create(after_value)
 	if current.value == value then
 		local tmp = current.next
 		node.next = tmp
@@ -73,13 +87,13 @@ M.insert_after = function(value, after_value)
 	current.next = node
 end
 
-M.reverse = function()
-	if not head.next then
+function M:reverse()
+	if not self.head.next then
 		return
 	end
 
 	local prev = nil
-	local current = head
+	local current = self.head
 	local next_node
 
 	while current do
@@ -89,11 +103,11 @@ M.reverse = function()
 		current = next_node
 	end
 
-	head = prev
+	self.head = prev
 end
 
-M.print_list = function()
-	local current = head
+function M:print_list()
+	local current = self.head
 	while current do
 		print(current.value)
 		current = current.next
